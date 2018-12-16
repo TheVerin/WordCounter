@@ -17,7 +17,7 @@ def word_changer(text='') -> list:
     return words
 
 
-def word_df(words: list):
+def word_df(words: list, num=10):
     found = {}
     words_set = set(words)
     for i in words:
@@ -33,6 +33,7 @@ def word_df(words: list):
 
     found_df = pd.DataFrame({'word': words_list, 'value': values_list})
     found_df = found_df.sort_index(by=['value'], ascending=False)
+    found_df = found_df.head(num)
     return found_df
 
 
@@ -43,18 +44,22 @@ def plot_maker(found_df):
 
 def final(request):
     title = ''
+    number = 10
     text = ''
     result_pre = 'Wait a second ;)'
 
     if request.GET.get('title'):
         title = request.GET.get('title')
-        if request.GET.get('text'):
-            text = request.GET.get('text')
-            a = word_changer(text)
-            b = word_df(a)
-            result = plot_maker(b)
+        if request.GET.get('number'):
+            num = request.GET.get('number')
+            number = int(num)
+            if request.GET.get('text'):
+                text = request.GET.get('text')
+                a = word_changer(text)
+                b = word_df(a, number)
+                result = plot_maker(b)
 
-    obj = WoCount.objects.create(title=title, text=text)
+    obj = WoCount.objects.create(title=title, text=text, number=number)
     obj.save()
 
     return render(
@@ -62,6 +67,7 @@ def final(request):
         'index.html',
         {
             'title': title,
+            'number': number,
             'text': text,
             'result': result_pre
         }
