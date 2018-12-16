@@ -1,0 +1,25 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Count your words!</title>
+</head>
+<body>
+    <section class="counter-ui">
+        <div class="container">
+            <form action="" method="GET">
+                <input type="search" placeholder="Title:" name="title">
+                <input type="search" placeholder="Show me your text" name="text">
+                <button>Go</button>
+            </form>
+            <div>
+                <p>Your secret message: {{result}}</p>
+                <br/>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
