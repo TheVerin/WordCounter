@@ -1,35 +1,31 @@
 from django.shortcuts import render
 from counter.models import WoCount
 import matplotlib.pyplot as plt
+import re
 
 
-def word_changer(text: str) -> list:
-    dot = text.split('.')
-    str_1 = ''.join(dot)
-    pre_words = str_1.split(' ')
+def word_changer(text='') -> list:
+    words_only = re.findall(r"[\w']+", text)
     words = []
-    for i in pre_words:
-        temp_list = []
+    for i in words_only:
+        temp = []
         for ch in i:
-            temp_list.append(ch.lower())
-            words.append(''.join(temp_list))
+            temp.append(ch.lower())
+        words.append(''.join(temp))
     return words
 
 
-def word_dict(words: list) -> dict:
-    words = word_changer()
+def word_dict(words: list):
     found = {}
     words_set = set(words)
     for i in words:
         if i in words_set:
             found.setdefault(i, 0)
             found[i] += 1
-    found = [(k, found[k]) for k in sorted(found, key=found.get, reverse=True)]
     return found
 
 
 def plot_maker(found: dict):
-    found = word_dict()
     plt.bar(range(len(found)), found.values(), align='center')
     plt.xticks(range(len(found)), list(found.keys()))
     return plt.show()
@@ -38,6 +34,7 @@ def plot_maker(found: dict):
 def final(request):
     title = ''
     text = ''
+    result = ''
 
     if request.GET.get('title'):
         title = request.GET.get('title')
